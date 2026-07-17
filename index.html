@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trey McMillon</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden; /* prevents accidental scroll bounce before we navigate */
+  }
+
+  .splash {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    cursor: pointer;
+  }
+
+  .splash img {
+    width: min(46vw, 420px);
+    height: auto;
+    opacity: 0;
+    animation: fade-in 0.6s ease forwards 0.15s;
+  }
+
+  .splash-hint {
+    position: fixed;
+    bottom: 32px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    opacity: 0;
+    animation: fade-in 0.6s ease forwards 0.5s;
+  }
+
+  @keyframes fade-in {
+    to { opacity: 1; }
+  }
+
+  @media (max-width: 640px) {
+    .splash img { width: 62vw; }
+  }
+</style>
+</head>
+<body>
+
+<a class="splash" href="projects.html" aria-label="Enter site">
+  <img src="images/treymcmillon.png" alt="Trey McMillon">
+</a>
+<div class="splash-hint">Click or scroll to enter</div>
+
+<script>
+  // Scrolling (mouse wheel, trackpad, or touch swipe) also enters the site,
+  // in addition to the click already handled by the <a> wrapping the logo.
+  let entered = false;
+
+  function enter() {
+    if (entered) return;
+    entered = true;
+    window.location.href = "projects.html";
+  }
+
+  window.addEventListener("wheel", enter, { passive: true });
+  window.addEventListener("touchmove", enter, { passive: true });
+</script>
+
+</body>
+</html>
