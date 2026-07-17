@@ -19,7 +19,16 @@
     justify-content: center;
     background: #ffffff;
     cursor: pointer;
-  }
+    transition: opacity 0.4s ease;
+}
+
+.splash.is-leaving {
+    opacity: 0;
+}
+
+.splash-hint.is-leaving {
+    opacity: 0;
+}
 
   .splash img {
     width: min(46vw, 420px);
@@ -53,22 +62,28 @@
 </head>
 <body>
 
-<a class="splash" href="projects.html" aria-label="Enter site">
+<a class="splash" href="projects.html" aria-label="Enter site" id="splash">
   <img src="images/treymcmillon.png" alt="Trey McMillon">
 </a>
-<div class="splash-hint">Click or scroll to enter</div>
+<div class="splash-hint" id="hint">Click or scroll to enter</div>
 
 <script>
-  // Scrolling (mouse wheel, trackpad, or touch swipe) also enters the site,
-  // in addition to the click already handled by the <a> wrapping the logo.
   let entered = false;
+  const splash = document.getElementById("splash");
+  const hint = document.getElementById("hint");
 
-  function enter() {
+  function enter(e) {
     if (entered) return;
     entered = true;
-    window.location.href = "projects.html";
+    if (e) e.preventDefault();
+    splash.classList.add("is-leaving");
+    hint.classList.add("is-leaving");
+    setTimeout(function () {
+      window.location.href = "projects.html";
+    }, 400);
   }
 
+  splash.addEventListener("click", enter);
   window.addEventListener("wheel", enter, { passive: true });
   window.addEventListener("touchmove", enter, { passive: true });
 </script>
