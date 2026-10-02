@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dimension Calculator</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='8' width='42' height='42' rx='10' fill='%23f2b705' stroke='%231d2b33' stroke-width='4'/%3E%3Ccircle cx='25' cy='29' r='11' fill='%23fafbf8' stroke='%231d2b33' stroke-width='4'/%3E%3Ccircle cx='25' cy='29' r='3' fill='%231d2b33'/%3E%3Crect x='40' y='38' width='20' height='14' fill='%23f2b705' stroke='%231d2b33' stroke-width='4'/%3E%3Cpath d='M47 38v6M53 38v8' stroke='%231d2b33' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#eef1ec;--panel:#fafbf8;--ink:#1d2b33;--mute:#5d6b72;--line:#c9d1cb;--accent:#f2b705;--accent-ink:#1d2b33;--blue:#2f6591;--err:#a8321f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141b20;--panel:#1b242a;--ink:#e8ede9;--mute:#93a1a8;--line:#2e3a41;--blue:#7fb2dd;--err:#ff8f7a}}
+:root[data-theme="dark"]{--bg:#141b20;--panel:#1b242a;--ink:#e8ede9;--mute:#93a1a8;--line:#2e3a41;--blue:#7fb2dd;--err:#ff8f7a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "IBM Plex Sans",system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:28px 18px 48px}
+h1{font:600 34px/1 "Barlow Condensed",Impact,sans-serif;letter-spacing:.01em;margin:0 0 4px}
+.sub{color:var(--mute);margin:0 0 22px}
+.panel{background:var(--panel);border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:4px;padding:18px;margin-bottom:18px}
+h2{font:600 22px/1.1 "Barlow Condensed",Impact,sans-serif;margin:0 0 12px}
+label{display:block;font-weight:500;font-size:14px;margin-bottom:6px}
+input,select{width:100%;font:inherit;font-size:20px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:10px 12px}
+input:focus,select:focus{outline:3px solid var(--blue);outline-offset:1px}
+.prec{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.prec label{margin:0;white-space:nowrap}
+.prec select{width:auto;font-size:16px}
+.result{margin-top:14px}
+.big{font:600 52px/1.05 "Barlow Condensed",Impact,sans-serif;word-break:break-word}
+.big.err{font-size:18px;font-family:"IBM Plex Sans",sans-serif;font-weight:400;color:var(--err)}
+.alt{display:flex;flex-wrap:wrap;gap:6px 24px;color:var(--mute);margin-top:6px;font-size:15px}
+.alt b{color:var(--ink);font-weight:500}
+.row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+button{font:500 14px "IBM Plex Sans",sans-serif;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:8px 12px;border-radius:3px;cursor:pointer}
+button:hover{border-color:var(--blue)}
+button:focus-visible{outline:3px solid var(--blue)}
+.hint{font-size:13.5px;color:var(--mute);margin-top:12px}
+.hint code{background:var(--bg);padding:1px 5px;border-radius:3px;font-size:13px}
+.ex button{font-size:13px}
+</style>
+</head>
+<body>
+<main>
+<h1>Dimension Calculator</h1>
+<p class="sub">Add and subtract feet and inches, convert units, and round decimals to fractions.</p>
+
+<div class="prec"><label for="prec">Round to nearest</label>
+<select id="prec"><option value="2">1/2"</option><option value="4">1/4"</option><option value="8">1/8"</option><option value="16" selected>1/16"</option><option value="32">1/32"</option><option value="64">1/64"</option></select></div>
+
+<section class="panel">
+<h2>Add, subtract, convert</h2>
+<label for="expr">Dimensions</label>
+<input id="expr" value="216'-9&quot; + 102'-3&quot;" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="text">
+<div class="result" id="out1" aria-live="polite"></div>
+<div class="row ex" id="ex"></div>
+<p class="hint">Write dimensions as <code>12'-6 1/2"</code>, <code>12'</code>, <code>9 3/8"</code> or <code>150"</code>. Use <code>+</code> and <code> - </code> (spaces around subtract, or right after a <code>"</code>). A bare number counts as inches. Type one value, like <code>12.5'</code> or <code>150"</code>, to convert it.</p>
+</section>
+
+<section class="panel">
+<h2>Decimal to fraction</h2>
+<label for="dec">Decimal inches</label>
+<input id="dec" value="65.23" inputmode="decimal" autocomplete="off">
+<div class="result" id="out2" aria-live="polite"></div>
+</section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const gcd=(a,b)=>b?gcd(b,a%b):a;
+
+// Format inches (number) as xxx'-xx 1/16"
+function fmtFI(inches,N){
+  let units=Math.round(Math.abs(inches)*N), neg=inches<0&&units>0;
+  const ft=Math.floor(units/(12*N)); units-=ft*12*N;
+  const whole=Math.floor(units/N); let num=units-whole*N, den=N;
+  if(num){const g=gcd(num,den);num/=g;den/=g}
+  return (neg?"-":"")+ft+"'-"+whole+(num?" "+num+"/"+den:"")+'"';
+}
+function fmtIn(inches,N){
+  let units=Math.round(Math.abs(inches)*N), neg=inches<0&&units>0;
+  const whole=Math.floor(units/N); let num=units-whole*N, den=N;
+  if(num){const g=gcd(num,den);num/=g;den/=g}
+  const s=num?(whole?whole+" "+num+"/"+den:num+"/"+den):String(whole);
+  return (neg?"-":"")+s+'"';
+}
+const trim=(n,d)=>String(+n.toFixed(d));
+
+// Parse a single term into inches
+function parseTerm(s){
+  s=s.trim().replace(/[”″]/g,'"').replace(/[’′]/g,"'");
+  if(!s) throw new Error("Missing a dimension next to an operator.");
+  let neg=false; if(s[0]==="-"){neg=true;s=s.slice(1).trim()}
+  const m=s.match(/^(?:(\d+(?:\.\d+)?|\.\d+)\s*')?[\s-]*(.*)$/);
+  let ft=m[1]?parseFloat(m[1]):0, rest=m[2].replace(/"$/,"").trim(), inch=0;
+  if(rest){
+    let r=rest.match(/^(\d+(?:\.\d+)?|\.\d+)(?:[\s-]+(\d+)\/(\d+))?$/);
+    if(r){inch=parseFloat(r[1]); if(r[2]){ if(+r[3]===0) throw new Error("Fraction has a zero denominator."); inch+=r[2]/r[3]}}
+    else{
+      r=rest.match(/^(\d+)\/(\d+)$/);
+      if(!r) throw new Error('Can\'t read "'+s+'". Try a form like 12\'-6 1/2".');
+      if(+r[2]===0) throw new Error("Fraction has a zero denominator.");
+      inch=r[1]/r[2];
+    }
+  } else if(!m[1]) throw new Error("Missing a dimension next to an operator.");
+  const v=ft*12+inch; return neg?-v:v;
+}
+
+// Split on + and on subtract signs (spaced, or directly after a ")
+function evaluate(str){
+  const s=str.replace(/[−–]/g,"-").replace(/[”″]/g,'"').replace(/[’′]/g,"'").trim();
+  let terms=[],ops=[],cur="";
+  for(let i=0;i<s.length;i++){
+    const c=s[i], prev=s[i-1], next=s[i+1];
+    const isPlus=c==="+";
+    const isMinus=c==="-"&&cur.trim()!==""&&(prev==='"'||(/\s/.test(prev||"")&&/\s/.test(next||"")));
+    if(isPlus||isMinus){terms.push(cur);ops.push(isPlus?1:-1);cur=""}
+    else cur+=c;
+  }
+  terms.push(cur);
+  let total=parseTerm(terms[0]);
+  for(let i=1;i<terms.length;i++) total+=ops[i-1]*parseTerm(terms[i]);
+  return {total,count:terms.length};
+}
+
+function calc1(){
+  const N=+$("prec").value, el=$("out1"), str=$("expr").value;
+  if(!str.trim()){el.innerHTML="";return}
+  try{
+    const {total}=evaluate(str);
+    el.innerHTML=`<div class="big" id="res">${fmtFI(total,N)}</div>
+    <div class="alt"><span>Inches <b>${fmtIn(total,N)}</b></span><span>Decimal inches <b>${trim(total,4)}"</b></span><span>Decimal feet <b>${trim(total/12,4)}'</b></span></div>
+    <div class="row"><button id="cp">Copy result</button></div>`;
+    $("cp").onclick=e=>{const t=fmtFI(total,N);try{navigator.clipboard.writeText(t)}catch(_){}e.target.textContent="Copied"; setTimeout(()=>e.target.textContent="Copy result",1200)};
+  }catch(e){el.innerHTML=`<div class="big err">${e.message}</div>`}
+}
+
+function calc2(){
+  const N=+$("prec").value, el=$("out2"), v=$("dec").value.trim();
+  if(!v){el.innerHTML="";return}
+  const x=parseFloat(v);
+  if(!isFinite(x)||!/^-?\d*\.?\d+$/.test(v)){el.innerHTML='<div class="big err">Enter a decimal number, like 65.23.</div>';return}
+  const r=Math.round(Math.abs(x)*N)/N*Math.sign(x), diff=r-x;
+  el.innerHTML=`<div class="big">${fmtIn(x,N)}</div>
+  <div class="alt"><span>Exact value <b>${trim(r,5)}"</b></span><span>Difference <b>${diff===0?"none":(diff>0?"+":"")+trim(diff,4)+'" (rounded '+(diff>0?"up":"down")+")"}</b></span><span>In feet <b>${fmtFI(x,N)}</b></span></div>`;
+}
+
+const examples=[`216'-9" + 102'-3"`,`20'-0" - 7'-4 1/2"`,`12.5'`,`150"`,`5'-6" + 3 3/8" + 14'`];
+examples.forEach(t=>{const b=document.createElement("button");b.textContent=t;b.onclick=()=>{$("expr").value=t;calc1()};$("ex").appendChild(b)});
+$("expr").addEventListener("input",calc1);
+$("dec").addEventListener("input",calc2);
+$("prec").addEventListener("change",()=>{calc1();calc2()});
+calc1();calc2();
+</script>
+</body>
+</html>
